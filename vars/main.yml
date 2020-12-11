@@ -1,0 +1,11 @@
+---
+rke_soft_url: 'http://rancher-mirror.cnrancher.com'
+
+rke_architectures:
+  amd64: 'amd64'
+  x86_64: 'amd64'
+  armv6l: 'arm'
+  armv7l: 'arm'
+  aarch64: 'arm64'
+  32-bit: '386'
+  64-bit: 'amd64'

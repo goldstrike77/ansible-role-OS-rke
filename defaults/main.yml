@@ -1,0 +1,64 @@
+---
+# General parameters #
+rke_is_install: false # A boolean to determine whether or not to install the Rancher Kubernetes Engine.
+rke_version: '1.2.3' # Specify the Rancher Kubernetes Engine version.
+rke_kube_version: ''
+rke_node_role: 'agent' # Type of nodes in architecture, node or agent.
+rke_cgroup_driver: 'systemd' # Specifies the management of the container's cgroups, cgroupfs or systemd.
+
+# Role dependencies #
+rke_docker_dept: true # A boolean to determine whether or not to install Docker uses the same task.
+
+# Docker parameters #
+rke_docker_version: '18.09.9' # Specify the Docker version.
+rke_docker_edition: 'ce' # Specify the Docker edition.
+rke_docker_channel: 'stable' # Define Docker distribution.
+rke_docker_path: '/data' # Specify the Docker data folder.
+rke_docker_bip: '172.17.0.1/16' # Specify the Docker network bridge IP.
+rke_docker_syslog: false # A boolean value, Enable or Disable send log to remote Syslog server.
+
+# Listen port #
+rke_port_tcp_arg:
+  etcd: '2379-2380' # etcd server client API.
+  api: '6443' # Kubernetes API Server.
+  kube: '10250-10256' # All of kubelet services.
+  node: '30000-32767' # Default range for external service ports.
+rke_cni_tcp_arg:
+  calico_bgp: '179' # Calico networking with BGP.
+  calico_typha: '5473' # Calico networking with Typha.
+rke_cni_udp_arg:
+  flannel_vxlan: '8472' # Use in-kernel VXLAN to encapsulate the packets.
+  flannel_debug: '8285' # Debugging if your network and kernel prevent you from using VXLAN or host-gw.
+
+# System Variables #
+rke_arg:
+  uid: '2012' # Sets the Unix userID for deployment purposes.
+  user: 'rke' # Sets the Unix username for deployment purposes.
+  private_key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEpAIBAAKCAQEA6LxQaqzlRc9ZowzRCZtJJBLMJE745EYmdC/mubbEEM7f+QVZ
+    dC8gwyw2xt4z+UU1rDUK/jHpO5h3w162D9Sje+/4f/HkxAGoVJ2C3YbE1udqkPRb
+    KK99aPxOxYXl3zSCfEMn7Q2TIb3u0WaRqT997DnzJbwC7ay2YrHKcpPw/Cy6SDW0
+    aCpC7Y6k0jkstsIQvMlrrQocU7N5mGhXiXtCXLbx5wrh0SguPMGh0mt/ETFHzUrT
+    TzLZ+Fztet8CtLLblO8JsTusLeT5MlgKwdxbO1XQMtZis0jqkydOb/LzDKa5L2Mn
+    LUYu1eMD4n1BFN0xhr7MiqPaf7y5U69NTBERxQIDAQABAoIBAGRg5CY+T9yeI8EJ
+    RBdqnE8stFNspDiAcRFnn5G13DaLo1oaDoznzq+fIDkBmVUHnrCZaBZenIORrQXc
+    kZWeVqybwYgdYlePh3SHQuwctkUiJnpCihawKdzgBXF34L82PJkvtcauNik1bA1w
+    uZ5PvhXmoJJD1td/yGIk4HYujJ+WMGuP6RO1v2JrlUroEpdx+i30VK7yGYyI10sR
+    w/cooCsB598VIAOgiHB0WoJloKmok2Zb0qiB+nKeEW2xour6ffnennXNWw29ieqA
+    7FrK2CzgNpqx2dnRk63X0qCGzIZfxXSat2VRSA6nVKLWnGt5UezVKGYvtwIvKuZ4
+    gggsXnkCgYEA9OcQQ1ko8IZlx+may5ei+vAd8I/e9W/VX5TZ4Ft9+VT0T4lLK1OJ
+    YcYB0Ft/LEnlNJI+vUTD3YKrW/3i+GUXKet0aeUr/6bl/6gzioGrkre7CNlhcq6G
+    W/eFUHhlrshsaJecnLe7xiu8WBC6ERdztDTsQnDzxVVekomjs7LGn6sCgYEA80gc
+    N0w0I4qeCumxcIEhEBzIJiZBJ87jclrayXrJLa6atC5axhRpTvtVe4IwRq9gPn7j
+    yssxbWk1asNv2nL9TLrFqn+a8SHA5wbwG8uLxwNf6gK+ITyANhwnTdzytiwrkmV0
+    ThFnAJo3c2l4kOWmOuCe2aAJHlT4LhehoXQ1ZE8CgYEAjs7OpPcw8FDuuQx3v5DE
+    8R9j1guPL//upLXf9vxjESmA7YBZ3QHxcppMJHu2RNUyWt2MyEF5FYpE8neyCrao
+    M0GhuL5yUbm5FMO4imPi8MNCxX49XOp4XtiPXMVYRfuJe9Qs9xYM4RpP0eqvFZhf
+    WA4kVvoWrFODul+Yngj52dECgYBx4mTLAhI6PQ6kvycAKoKmv0J2kVvY3cGda6iV
+    vrPkfaMQC88UgMOXZJJsodIllL1yJAZQjXQS6rhFxT1cPo4S2C/mE5wdmxZpT9cg
+    u9UwEYVZz3TfrCm8qss/aNn5q42uF24tiXn1Tzv7+/ijo82ALFxQNdlu6InRUeCo
+    6vR/gwKBgQCm6065cCeH4EvhXaegNV3XE+g8QN/KpgedOQO/CPAbb4LE6A4SdF3F
+    xLn0tFLmNi3pIgjcdyx9OXL+SPKUXB6tYfW7yh/KeblzAc52XtnKo6/fm/SJbo2d
+    W/LwS9xOx+pahWESfe0iekm2iNbr2QewmP3cqWGWuZNLUyJxTFyENQ==
+    -----END RSA PRIVATE KEY-----

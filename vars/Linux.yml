@@ -1,0 +1,40 @@
+---
+rke_module_dependents:
+  - { name: 'br_netfilter' }
+  - { name: 'ip6_udp_tunnel', create: '{{ ansible_default_ipv6 | length > 0 }}' }
+  - { name: 'ip_set' }
+  - { name: 'ip_set_hash_ip' }
+  - { name: 'ip_set_hash_net' }
+  - { name: 'iptable_filter' }
+  - { name: 'iptable_nat' }
+  - { name: 'iptable_mangle' }
+  - { name: 'iptable_raw' }
+  - { name: 'nf_conntrack_netlink' }
+  - { name: 'nf_conntrack' }
+  - { name: 'nf_conntrack_ipv4' }
+  - { name: 'nf_defrag_ipv4' }
+  - { name: 'nf_nat' }
+  - { name: 'nf_nat_ipv4' }
+  - { name: 'nf_nat_masquerade_ipv4' }
+  - { name: 'nfnetlink' }
+  - { name: 'udp_tunnel' }
+  - { name: 'veth' }
+  - { name: 'vxlan' }
+  - { name: 'x_tables' }
+  - { name: 'xt_addrtype' }
+  - { name: 'xt_conntrack' }
+  - { name: 'xt_comment' }
+  - { name: 'xt_mark' }
+  - { name: 'xt_multiport' }
+  - { name: 'xt_nat' }
+  - { name: 'xt_recent' }
+  - { name: 'xt_set' }
+  - { name: 'xt_statistic' }
+  - { name: 'xt_tcpudp' }
+
+rke_kernel_parameters:
+  - { variable: 'net.bridge.bridge-nf-call-iptables', value: '1' }
+  - { variable: 'net.bridge.bridge-nf-call-ip6tables', value: '1', create: '{{ ansible_default_ipv6 | length > 0 }}' }
+
+rke_sshd_parameters:
+  - { regexp: 'AllowTcpForwarding', line: 'AllowTcpForwarding yes' }

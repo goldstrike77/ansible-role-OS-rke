@@ -1,0 +1,6 @@
+---
+- name: Include system variables.
+  include_vars: '{{ ansible_system }}.yml'
+
+- name: Include tasks for specific Operating System.
+  include: '{{ ansible_system }}.yml'

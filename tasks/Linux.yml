@@ -1,0 +1,53 @@
+---
+- name: Include OS-specific variables.
+  include_vars: '{{ ansible_os_family }}.yml'
+
+#- name: Include tasks for specific Linux release.
+#  include: '{{ ansible_system }}/{{ ansible_os_family }}.yml'
+
+- name: Remove swapfile from /etc/fstab.
+  mount:
+    name: 'swap'
+    fstype: 'swap'
+    state: 'absent'
+
+- name: Disable swap.
+  command: 'swapoff -a'
+  when: ansible_swaptotal_mb > 0
+
+- name: Installs necessary runtime module.
+  modprobe:
+    name: '{{ item.name }}'
+    state: 'present'
+  loop: '{{ rke_module_dependents }}'
+  when: item.create | default(true) | bool
+
+- name: Configure kernel parameters.
+  sysctl:
+    name: '{{ item.variable }}'
+    value: '{{ item.value }}'
+    state: 'present'
+    reload: 'yes'
+    sysctl_set: 'yes'
+    sysctl_file: '/etc/sysctl.d/20-sysctl.conf'
+  loop: '{{ rke_kernel_parameters }}'
+  when: item.create | default(true) | bool
+
+- name: SSH Server Configuration.
+  lineinfile:
+    state: 'present'
+    dest: '/etc/ssh/sshd_config'
+    regexp: '^{{ item.regexp }}'
+    line: '{{ item.line }}'
+  loop: '{{ rke_sshd_parameters }}'
+  notify:
+    - Restart sshd service.
+
+- name: Flush handlers.
+  meta: flush_handlers
+
+- name: Include firewall tasks.
+  include: '{{ ansible_system }}/firewall.yml'
+
+- name: Installation the Rancher Kubernetes Engine version.
+  include: '{{ ansible_system }}/install.yml'

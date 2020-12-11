@@ -1,0 +1,63 @@
+---
+- name: Add the user rke.
+  user:
+    name: '{{ rke_arg.user }}'
+    comment: '{{ rke_arg.user }}'
+    create_home: 'yes'
+    shell: '/bin/bash'
+    uid: '{{ rke_arg.uid }}'
+    group: 'docker'
+
+- name: Creating ssh authorized keys folder.
+  file:
+    dest: '/home/{{ rke_arg.user }}/.ssh'
+    state: 'directory'
+    owner: '{{ rke_arg.user }}'
+    group: 'docker'
+    mode: '0700'
+
+- name: Transfer OpenSSL private keys.
+  copy:
+    dest: '/home/{{ rke_arg.user }}/.ssh/id_rsa'
+    content: '{{ rke_arg.private_key }}'
+    owner: '{{ rke_arg.user }}'
+    group: 'docker'
+    mode: '600'
+
+- name: Use RSA private key to generate public key.
+  shell: 'ssh-keygen -y -f /home/{{ rke_arg.user }}/.ssh/id_rsa > /home/{{ rke_arg.user }}/.ssh/authorized_keys'
+
+- name: Configure the appropriate permissions.
+  file:
+    path: '/home/{{ rke_arg.user }}/.ssh/authorized_keys'
+    owner: '{{ rke_arg.user }}'
+    group: 'docker'
+    mode: '600'
+
+- name: Check current Rancher Kubernetes Engine version.
+  command: '/usr/local/bin/rke --version'
+  register: rke_current_version
+  changed_when: false
+  failed_when: false
+
+- name: Delete existing Rancher Kubernetes Engine version if different.
+  file:
+    path: '/usr/local/bin/rke'
+    state: absent
+  when:
+    - rke_current_version.stdout is defined
+    - rke_version not in rke_current_version.stdout
+
+- name: Install Rancher Kubernetes Engine.
+  get_url:
+    url: '{{ rke_soft_url }}/rke/v{{ rke_version }}/rke_{{ ansible_system | lower }}-{{ rke_architectures[ansible_architecture] }}'
+    dest: '/usr/local/bin/rke'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+    validate_certs: 'no'
+  when: rke_current_version.rc == 2 or rke_version not in rke_current_version.stdout
+  register: rke_upgrade
+  until: rke_upgrade is succeeded
+  retries: 5
+  delay: 2

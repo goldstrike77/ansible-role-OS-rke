@@ -1,0 +1,5 @@
+---
+rke_kube_repo_name: 'kubernetes'
+rke_kube_repo_url: 'http://mirrors.tuna.tsinghua.edu.cn/kubernetes/yum/repos/kubernetes-el{{ ansible_distribution_major_version }}-{{ ansible_architecture }}/'
+rke_kube_package:
+  - 'kubectl-{{ kube_version }}-0'
