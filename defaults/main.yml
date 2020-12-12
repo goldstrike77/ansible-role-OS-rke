@@ -2,9 +2,16 @@
 # General parameters #
 rke_is_install: false # A boolean to determine whether or not to install the Rancher Kubernetes Engine.
 rke_version: '1.2.3' # Specify the Rancher Kubernetes Engine version.
-rke_kube_version: ''
+rke_kube_version: '1.18.12-rancher1-1' # Specify the Kubernetes version.
 rke_node_role: 'agent' # Type of nodes in architecture, node or agent.
+rke_prefix: '/data/rke' # prefix path for ROS, and CoreOS, RKE resources store.
+rke_proxy_ipvs: true # A boolean value, whether run kube-proxy in IPVS mode. 
 rke_cgroup_driver: 'systemd' # Specifies the management of the container's cgroups, cgroupfs or systemd.
+
+# Kubernetes networking #
+rke_kube_cni: 'canal' # Specify the Kubernetes CNI plugins, calico / flannel / canal.
+rke_pod_cidr: '10.42.0.0/16' # CIDR pool used to assign IP addresses to pods in the cluster.
+rke_srv_cidr: '10.43.0.0/16' # IP range for any services created on Kubernetes.
 
 # Role dependencies #
 rke_docker_dept: true # A boolean to determine whether or not to install Docker uses the same task.
@@ -29,6 +36,9 @@ rke_cni_tcp_arg:
 rke_cni_udp_arg:
   flannel_vxlan: '8472' # Use in-kernel VXLAN to encapsulate the packets.
   flannel_debug: '8285' # Debugging if your network and kernel prevent you from using VXLAN or host-gw.
+rke_ingress_tcp_arg:
+  http: '80'
+  https: '443'
 
 # System Variables #
 rke_arg:
@@ -62,3 +72,21 @@ rke_arg:
     xLn0tFLmNi3pIgjcdyx9OXL+SPKUXB6tYfW7yh/KeblzAc52XtnKo6/fm/SJbo2d
     W/LwS9xOx+pahWESfe0iekm2iNbr2QewmP3cqWGWuZNLUyJxTFyENQ==
     -----END RSA PRIVATE KEY-----
+
+# Service Mesh #
+environments: 'Development' # Define the service environment.
+datacenter: 'dc01' # Define the DataCenter.
+domain: 'local' # Define the Domain.
+#tags: # Define the service custom label.
+#  subscription: 'default'
+#  owner: 'nobody'
+#  department: 'Infrastructure'
+#  organization: 'The Company'
+#  region: 'China'
+exporter_is_install: false # Whether to install prometheus exporter.
+consul_public_register: false # Whether register a exporter service with public consul client.
+consul_public_exporter_token: '00000000-0000-0000-0000-000000000000' # Public Consul client ACL token.
+consul_public_http_prot: 'https' # The consul Hypertext Transfer Protocol.
+consul_public_http_port: '8500' # The consul HTTP API port.
+consul_public_clients: # List of public consul clients.
+  - '127.0.0.1'

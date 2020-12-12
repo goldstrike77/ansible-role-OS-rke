@@ -1,5 +1,10 @@
 ---
 rke_module_dependents:
+  - { name: 'ip_vs' }
+  - { name: 'ip_vs_rr' }
+  - { name: 'ip_vs_sh' }
+  - { name: 'ip_vs_wrr' }
+  - { name: 'overlay' }
   - { name: 'br_netfilter' }
   - { name: 'ip6_udp_tunnel', create: '{{ ansible_default_ipv6 | length > 0 }}' }
   - { name: 'ip_set' }
@@ -20,7 +25,6 @@ rke_module_dependents:
   - { name: 'udp_tunnel' }
   - { name: 'veth' }
   - { name: 'vxlan' }
-  - { name: 'x_tables' }
   - { name: 'xt_addrtype' }
   - { name: 'xt_conntrack' }
   - { name: 'xt_comment' }
@@ -30,11 +34,21 @@ rke_module_dependents:
   - { name: 'xt_recent' }
   - { name: 'xt_set' }
   - { name: 'xt_statistic' }
-  - { name: 'xt_tcpudp' }
 
 rke_kernel_parameters:
+  - { variable: 'vm.overcommit_memory', value: '1' }
+  - { variable: 'vm.panic_on_oom', value: '0' }
+  - { variable: 'kernel.panic', value: '10' }
+  - { variable: 'kernel.panic_on_oops', value: '1' }
+  - { variable: 'kernel.keys.root_maxbytes', value: '25000000' }
   - { variable: 'net.bridge.bridge-nf-call-iptables', value: '1' }
   - { variable: 'net.bridge.bridge-nf-call-ip6tables', value: '1', create: '{{ ansible_default_ipv6 | length > 0 }}' }
+  - { variable: 'net.core.somaxconn', value: '65535' }
+  - { variable: 'net.ipv4.neigh.default.gc_thresh3', value: '8192' }
+  - { variable: 'net.ipv4.neigh.default.gc_thresh2', value: '6144' }
+  - { variable: 'net.ipv4.neigh.default.gc_thresh1', value: '4096' }
+  - { variable: 'net.ipv4.neigh.default.gc_stale_time', value: '120' }
+  - { variable: 'kernel.perf_event_paranoid', value: '-1' }
 
 rke_sshd_parameters:
   - { regexp: 'AllowTcpForwarding', line: 'AllowTcpForwarding yes' }

@@ -40,13 +40,27 @@
   changed_when: false
   failed_when: false
 
+- name: Check current Kubernetes kubectl version.
+  command: '/usr/local/bin/kubectl version'
+  register: kube_current_version
+  changed_when: false
+  failed_when: false
+
 - name: Delete existing Rancher Kubernetes Engine version if different.
   file:
     path: '/usr/local/bin/rke'
-    state: absent
+    state: 'absent'
   when:
     - rke_current_version.stdout is defined
     - rke_version not in rke_current_version.stdout
+
+- name: Delete existing Kubernetes kubectl version if different.
+  file:
+    path: '/usr/local/bin/kubectl'
+    state: 'absent'
+  when:
+    - kube_current_version.stdout is defined
+    - rke_kube_version.split("-")[0] not in kube_current_version.stdout
 
 - name: Install Rancher Kubernetes Engine.
   get_url:
@@ -59,5 +73,19 @@
   when: rke_current_version.rc == 2 or rke_version not in rke_current_version.stdout
   register: rke_upgrade
   until: rke_upgrade is succeeded
+  retries: 5
+  delay: 2
+
+- name: Install Kubernetes kubectl.
+  get_url:
+    url: '{{ rke_soft_url }}/kubectl/v{{ rke_kube_version.split("-")[0] }}/{{ ansible_system | lower }}-{{ rke_architectures[ansible_architecture] }}-v{{ rke_kube_version.split("-")[0] }}-kubectl'
+    dest: '/usr/local/bin/kubectl'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+    validate_certs: 'no'
+  when: kube_current_version.rc == 2 or rke_kube_version.split("-")[0] not in kube_current_version.stdout
+  register: kube_upgrade
+  until: kube_upgrade is succeeded
   retries: 5
   delay: 2

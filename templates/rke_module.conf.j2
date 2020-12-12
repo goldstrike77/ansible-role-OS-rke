@@ -1,0 +1,5 @@
+{% for item in rke_module_dependents %}
+{% if item.create | default(true) | bool %}
+{{ item.name }}
+{% endif %}
+{% endfor %}

@@ -2,8 +2,8 @@
 - name: Include OS-specific variables.
   include_vars: '{{ ansible_os_family }}.yml'
 
-#- name: Include tasks for specific Linux release.
-#  include: '{{ ansible_system }}/{{ ansible_os_family }}.yml'
+- name: Include tasks for specific Linux release.
+  include: '{{ ansible_system }}/{{ ansible_os_family }}.yml'
 
 - name: Remove swapfile from /etc/fstab.
   mount:
@@ -21,6 +21,14 @@
     state: 'present'
   loop: '{{ rke_module_dependents }}'
   when: item.create | default(true) | bool
+
+- name: Transfer the module configuration file.
+  template:
+    src: 'rke_module.conf.j2'
+    dest: '/etc/modules-load.d/rke.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
 
 - name: Configure kernel parameters.
   sysctl:
@@ -51,3 +59,17 @@
 
 - name: Installation the Rancher Kubernetes Engine version.
   include: '{{ ansible_system }}/install.yml'
+
+- name: Creating prefix path for resources store.
+  file:
+    dest: '{{ rke_prefix }}'
+    state: 'directory'
+    owner: '{{ rke_arg.user }}'
+    group: 'docker'
+    mode: '0750'
+
+- name: Deploying Kubernetes with RKE.
+  include: '{{ ansible_system }}/up.yml'
+  when:
+    - rke_node_role == 'node'
+    - rke_nodes[0] in ansible_default_ipv4.address

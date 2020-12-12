@@ -9,3 +9,13 @@ rke_architectures:
   aarch64: 'arm64'
   32-bit: '386'
   64-bit: 'amd64'
+
+rke_nodes: "\
+  {% set _rke_nodes = [] %}\
+  {% for host in groups[group_names[-1]] %}\
+    {% set _rke_node_role = hostvars[host]['rke_node_role'] | default('agent', true) %}\
+    {% if ( _rke_node_role == 'node') %}\
+      {% if _rke_nodes.append(hostvars[host]['ansible_host']) %}{% endif %}\
+    {% endif %}\
+  {% endfor %}\
+  {{ _rke_nodes }}"

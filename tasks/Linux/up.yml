@@ -1,0 +1,14 @@
+---
+- name: Transfer the Cluster Configuration File.
+  template:
+    src: 'cluster.yml.j2'
+    dest: '/tmp/cluster.yml'
+    owner: '{{ rke_arg.user }}'
+    group: 'docker'
+    mode: '0640'
+
+#- name: Check if master has already been initialized.
+#  stat:
+#    path: '/etc/kubernetes/admin.conf'
+#  register: kube_init_stat
+#  when: kube_node_role == 'master'
