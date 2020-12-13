@@ -7,8 +7,7 @@
     group: 'docker'
     mode: '0640'
 
-#- name: Check if master has already been initialized.
-#  stat:
-#    path: '/etc/kubernetes/admin.conf'
-#  register: kube_init_stat
-#  when: kube_node_role == 'master'
+- name: Check if master has already been initialized.
+  stat:
+    path: '/data/rke/etc/kubernetes'
+  register: kube_init_stat

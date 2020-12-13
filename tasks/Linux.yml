@@ -62,7 +62,7 @@
 
 - name: Creating prefix path for resources store.
   file:
-    dest: '{{ rke_prefix }}'
+    dest: '{{ rke_prefix }}/rke'
     state: 'directory'
     owner: '{{ rke_arg.user }}'
     group: 'docker'

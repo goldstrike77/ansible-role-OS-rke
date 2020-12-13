@@ -4,8 +4,12 @@ rke_is_install: false # A boolean to determine whether or not to install the Ran
 rke_version: '1.2.3' # Specify the Rancher Kubernetes Engine version.
 rke_kube_version: '1.18.12-rancher1-1' # Specify the Kubernetes version.
 rke_node_role: 'agent' # Type of nodes in architecture, node or agent.
-rke_prefix: '/data/rke' # prefix path for ROS, and CoreOS, RKE resources store.
+rke_prefix: '/data' # prefix path for ROS, and CoreOS, RKE resources store.
+rke_secrets_encrypt: true # A boolean to determine whether or not at-rest data encryption.
+rke_audit_log: true # A boolean to determine whether or not to enable audit log.
 rke_proxy_ipvs: true # A boolean value, whether run kube-proxy in IPVS mode. 
+rke_event_rate_limit: true # A boolean value, whether or not to enable event rate limit.
+rke_pod_security_policy: true # A boolean value, whether or not to enable the Kubernetes Pod Security Policy.
 rke_cgroup_driver: 'systemd' # Specifies the management of the container's cgroups, cgroupfs or systemd.
 
 # Kubernetes networking #

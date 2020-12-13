@@ -27,11 +27,11 @@ services:
   kube-api:
     service_cluster_ip_range: "{{ rke_srv_cidr }}"
     service_node_port_range: "{{ rke_port_tcp_arg.node }}"
-    pod_security_policy: true
+    pod_security_policy: {{ rke_pod_security_policy | bool | to_json }}
     secrets_encryption_config:
-      enabled: true
+      enabled: {{ rke_secrets_encrypt | bool | to_json }}
     audit_log:
-      enabled: true
+      enabled: {{ rke_audit_log | bool | to_json }}
       configuration:
         max_age: 6
         max_backup: 6
@@ -99,7 +99,7 @@ services:
               omitStages:
                 - "RequestReceived"
     event_rate_limit:
-      enabled: true
+      enabled: {{ event_rate_limit | bool | to_json }}
     extra_args:
       watch-cache: true
       default-watch-cache-size: 1500
@@ -226,7 +226,7 @@ ingress:
   options:
     use-forwarded-headers: "true"
 cluster_name: "{{ group_names[0] | title | regex_replace("_", "-") }}-{{ group_names[-1] | title | regex_replace("_", "-") }}-{{ environments | upper | regex_replace("_", "-") }}-APIServer"
-prefix_path: "{{ rke_prefix }}"
+prefix_path: "{{ rke_prefix }}/rke"
 addon_job_timeout: 0
 #bastion_host:
 #  address: ""
