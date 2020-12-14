@@ -44,6 +44,36 @@ rke_ingress_tcp_arg:
   http: '80'
   https: '443'
 
+# Backup parameters #
+rke_backupset_arg:
+  interval: '1' # The duration in hours between recurring backups.
+  retention: '168' # The number of snapshots to retain before rotation.
+  bucket: 'rke' # S3 bucket name where backups will be stored.
+  access_key: 'Q9G1ILS2D1KKUFPAVUTN' # S3 access key with permission to access the backup bucket.
+  secret_key: 'zrBPTvumUN9QaKZ6J1vqeG0KREYWnBTPr3dZA3Q4' # S3 secret key with permission to access the backup bucket.
+  endpoint: 'demo-sit-production-minio-rke.service.dc01.local:9001' # S3 regions endpoint for the backup bucket.
+  custom_ca: | # Custom certificate authority to use when connecting to the endpoint.
+    -----BEGIN CERTIFICATE-----
+    MIIDRDCCAiwCCQCLL4t71Jt1ojANBgkqhkiG9w0BAQsFADBkMQswCQYDVQQGEwJY
+    WDENMAsGA1UECAwETWFyczEWMBQGA1UEBwwNTW91bnQgT2x5bXB1czEQMA4GA1UE
+    CgwHQ29tcGFueTENMAsGA1UECwwEVW5pdDENMAsGA1UEAwwEUk9PVDAeFw0yMDA2
+    MTEwOTE2MzlaFw00MDA2MTEwOTE2MzlaMGQxCzAJBgNVBAYTAlhYMQ0wCwYDVQQI
+    DARNYXJzMRYwFAYDVQQHDA1Nb3VudCBPbHltcHVzMRAwDgYDVQQKDAdDb21wYW55
+    MQ0wCwYDVQQLDARVbml0MQ0wCwYDVQQDDARST09UMIIBIjANBgkqhkiG9w0BAQEF
+    AAOCAQ8AMIIBCgKCAQEA0gpK3LDFYKib5XZs0IlEL/Mzx4WdLhhHCPeiYNNKkxKn
+    VaUKE+M/B1K+hTZmYLfG5VAOZgkdpWr7pfmPSN9qWyKNqderAHzQu8A4YbxbSSQV
+    DKVcpQCaHEfjcEKjl0zDIX1MKzJiArJ4YPTCixgDlni195BmDBw100YGa3jw+DxS
+    LLlR8TA7yeLu/0NmDU31/3u5fAVZ+Vqsnlvn+rJ87Zzdkkq4EPPXojpbDIol+TL1
+    BIW+KNLMwZ4g8AGmdzfRP+ztmNqnK/M7j+KhK7XI2YpvkdhSCXmdx/gUs5S8xmhP
+    XKcSLFYhWsxj3wo9ZXsmwAjfQaS6Zfy4+F7junBlDQIDAQABMA0GCSqGSIb3DQEB
+    CwUAA4IBAQBDrF/ceHWzXwobHoPLLwi+mJxGsS6ROU3Qs2siLdBz374NMfA2Stke
+    Mj4uOTvcvgzl/yMMVLg/sQXLyo/gEa9Ya4XdX4qNiDcCp3x6J3gmkl0kqO687yQJ
+    EumEWUWrfxgjxtHR1C/cTEgqc6F0RWGsV+23dOBoLoQBkv4cTldyj0FLDIdIHwjw
+    AW3Py12YobJ54lv8jlfaUEf5x7gwyMny04uh4hM5MGMVGof+wQZuM4bY30dV526y
+    AOqx13cHJzMBEmxhWQ5gdP3c9wJqUnI+002ON7bZr9mUtCEZoBSu41oT8lhc4m4d
+    YB2cjNpMuRLjcS6Ge5rABpyAFYoTThXv
+    -----END CERTIFICATE-----
+
 # System Variables #
 rke_arg:
   uid: '2012' # Sets the Unix userID for deployment purposes.

@@ -15,12 +15,20 @@ services:
   etcd:
     gid: 2013
     uid: 2013
+    interval_hours: {{ rke_backupset_arg.interval }}
+    retention: {{ rke_backupset_arg.retention }}
+{% if rke_backupset_arg.endpoint is defined %}
     backup_config:
-      interval_hours: 12
-      retention: 6
-    snapshot: true
-    creation: 6h
-    retention: 24h
+      s3backupconfig:
+        access_key: {{ rke_backupset_arg.access_key }}
+        secret_key: {{ rke_backupset_arg.secret_key }}
+        bucket_name: {{ rke_backupset_arg.bucket }}
+        folder: {{ group_names[0] | title | regex_replace("_", "-") }}-{{ group_names[-1] | title | regex_replace("_", "-") }}-{{ environments | upper | regex_replace("_", "-") }}
+        region: ""
+        endpoint: {{ rke_backupset_arg.endpoint }}
+        custom_ca: |-
+{{ rke_backupset_arg.custom_ca | indent( width=10, indentfirst=True ) }}
+{% endif %}
     extra_args:
       quota-backend-bytes: "6442450944"
       auto-compaction-retention: 240 #(单位小时)
@@ -99,7 +107,7 @@ services:
               omitStages:
                 - "RequestReceived"
     event_rate_limit:
-      enabled: {{ event_rate_limit | bool | to_json }}
+      enabled: {{ rke_event_rate_limit | bool | to_json }}
     extra_args:
       watch-cache: true
       default-watch-cache-size: 1500

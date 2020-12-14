@@ -1,7 +1,7 @@
 ---
 - name: Install the dependents packages.
   yum:
-    name: '{{ rke_kube_package }}'
+    name: '{{ rke_kube_packages }}'
     state: 'present'
     validate_certs: 'no'
     disable_gpg_check: 'yes'

@@ -7,7 +7,15 @@
     group: 'docker'
     mode: '0640'
 
+- name: Generating Certificate Signing Requests.
+  command: '/usr/local/bin/rke cert generate-csr --config /tmp/cluster.yml'
+  become: 'yes'
+  become_user: '{{ rke_arg.user }}'
+
 - name: Check if master has already been initialized.
   stat:
     path: '/data/rke/etc/kubernetes'
   register: kube_init_stat
+
+- name: Include certificate tasks.
+  include: 'certificates.yml'

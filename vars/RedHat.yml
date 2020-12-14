@@ -1,3 +1,4 @@
 ---
-rke_kube_package:
+rke_kube_packages:
   - 'ipvsadm'
+  - 'python-pip'

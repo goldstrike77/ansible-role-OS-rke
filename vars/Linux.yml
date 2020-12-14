@@ -52,3 +52,9 @@ rke_kernel_parameters:
 
 rke_sshd_parameters:
   - { regexp: 'AllowTcpForwarding', line: 'AllowTcpForwarding yes' }
+
+rke_pypi_url: 'pypi.tuna.tsinghua.edu.cn'
+
+rke_python_dependent_packages:
+  - 'pip'
+  - 'cryptography'

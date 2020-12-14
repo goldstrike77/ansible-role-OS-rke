@@ -73,3 +73,26 @@
   when:
     - rke_node_role == 'node'
     - rke_nodes[0] in ansible_default_ipv4.address
+
+- name: Ensure .kube directory exists.
+  file:
+    path: '{{ ansible_env.PWD }}/.kube'
+    state: 'directory'
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: '0755'
+  when:
+    - rke_node_role == 'node'
+    - rke_nodes[0] in ansible_default_ipv4.address
+
+- name: Symlink the kubectl config.
+  copy:
+    src: '/tmp/kube_config_cluster.yml'
+    dest: '{{ ansible_env.PWD }}/.kube/config'
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: '0644'
+    remote_src: 'yes'
+  when:
+    - rke_node_role == 'node'
+    - rke_nodes[0] in ansible_default_ipv4.address

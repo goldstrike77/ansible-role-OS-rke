@@ -1,0 +1,45 @@
+---
+- name: Install requirement python package.
+  pip:
+    name: '{{ rke_python_dependent_packages }}'
+    state: 'forcereinstall'
+    extra_args: '--default-timeout=120 --ignore-installed -i https://{{ rke_pypi_url }}/simple --trusted-host {{ rke_pypi_url }}'
+  register: rke_python_status
+  until: rke_python_status is succeeded
+  retries: 5
+  delay: 2
+
+- name: Selfsigned CA file transfer.
+  copy:
+    src: 'ssl/{{ item }}'
+    dest: '/tmp/cluster_certs/{{ item }}'
+    owner: '{{ rke_arg.user}}'
+    group: 'docker'
+    mode: '640'
+  loop:
+    - 'kube-apiserver-requestheader-ca-key.pem'
+    - 'kube-apiserver-requestheader-ca.pem'
+    - 'kube-ca.pem'
+    - 'kube-service-account-token-key.pem'
+    - 'kube-service-account-token.pem'
+
+- name: Find Certificate Signing Request.
+  find:
+    paths: '/tmp/cluster_certs'
+    patterns: '*-csr.pem'
+  register: rke_csr_files
+
+- name: Generate an OpenSSL certificate signed with your own CA certificate.
+  openssl_certificate:
+    path: '{{ item | regex_replace("-csr", "") }}'
+    csr_path: '{{ item }}'
+    ownca_path: '/tmp/cluster_certs/kube-ca.pem'
+    ownca_privatekey_path: '/tmp/cluster_certs/kube-apiserver-requestheader-ca-key.pem'
+    select_crypto_backend: 'cryptography'
+    ownca_not_after: '+7305d'
+    provider: 'ownca'
+    owner: '{{ rke_arg.user}}'
+    group: 'docker'
+    mode: '0640'
+    state: 'present'
+  loop: '{{ rke_csr_files | json_query("files[*].path") }}'
