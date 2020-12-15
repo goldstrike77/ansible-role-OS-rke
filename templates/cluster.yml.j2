@@ -15,10 +15,10 @@ services:
   etcd:
     gid: 2013
     uid: 2013
-    interval_hours: {{ rke_backupset_arg.interval }}
-    retention: {{ rke_backupset_arg.retention }}
-{% if rke_backupset_arg.endpoint is defined %}
     backup_config:
+      interval_hours: {{ rke_backupset_arg.interval }}
+      retention: {{ rke_backupset_arg.retention }}
+{% if rke_backupset_arg.endpoint is defined %}
       s3backupconfig:
         access_key: {{ rke_backupset_arg.access_key }}
         secret_key: {{ rke_backupset_arg.secret_key }}
