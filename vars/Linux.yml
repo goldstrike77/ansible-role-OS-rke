@@ -56,5 +56,5 @@ rke_sshd_parameters:
 rke_pypi_url: 'pypi.tuna.tsinghua.edu.cn'
 
 rke_python_dependent_packages:
-  - 'pip'
+  - 'pip==20.3.4'
   - 'cryptography'
