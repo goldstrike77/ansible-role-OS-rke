@@ -3,7 +3,7 @@
   pip:
     name: '{{ rke_python_dependent_packages }}'
     state: 'forcereinstall'
-    extra_args: '--default-timeout=120 --ignore-installed -i https://{{ rke_pypi_url }}/simple --trusted-host {{ rke_pypi_url }}'
+    extra_args: '--default-timeout=120 -i https://{{ rke_pypi_url }}/simple --trusted-host {{ rke_pypi_url }}'
   register: rke_python_status
   until: rke_python_status is succeeded
   retries: 5
